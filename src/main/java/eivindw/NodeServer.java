@@ -1,4 +1,4 @@
-package bekk;
+package eivindw;
 
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.IMap;
