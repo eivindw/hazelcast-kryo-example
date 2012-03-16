@@ -1,6 +1,7 @@
 package eivindw.io;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.ObjectBuffer;
 import eivindw.domain.OtherObject;
 import eivindw.domain.SomeObject;
 
@@ -17,7 +18,13 @@ public final class KryoSerializer {
       kryo.register(HashMap.class);
    }
 
-   public static Kryo getKryo() {
-      return kryo;
+   public static byte[] write(Object obj) {
+      ObjectBuffer objectBuffer = new ObjectBuffer(kryo);
+      return objectBuffer.writeClassAndObject(obj);
+   }
+   
+   public static Object read(byte[] bytes) {
+      ObjectBuffer objectBuffer = new ObjectBuffer(kryo);
+      return objectBuffer.readClassAndObject(bytes);
    }
 }
