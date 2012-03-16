@@ -13,6 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -22,7 +23,7 @@ public class SerializationTest {
    
    @BeforeClass
    public static void setupClass() {
-      //System.setProperty(GroupProperties.PROP_SERIALIZER_GZIP_ENABLED, "true");
+      KryoSerializer.register(SomeObject.class, OtherObject.class, HashMap.class);
    }
 
    @Test

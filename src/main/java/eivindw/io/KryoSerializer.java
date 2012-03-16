@@ -13,9 +13,12 @@ public final class KryoSerializer {
 
    static {
       kryo.setRegistrationOptional(true);
-      kryo.register(SomeObject.class);
-      kryo.register(OtherObject.class);
-      kryo.register(HashMap.class);
+   }
+   
+   public static void register(Class... classes) {
+      for(Class clazz : classes) {
+         kryo.register(clazz);
+      }
    }
 
    public static byte[] write(Object obj) {

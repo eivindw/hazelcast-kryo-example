@@ -5,12 +5,14 @@ import com.hazelcast.core.IMap;
 import com.hazelcast.impl.GroupProperties;
 import eivindw.domain.OtherObject;
 import eivindw.domain.SomeObject;
+import eivindw.io.KryoSerializer;
 import io.W;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.Random;
 
 import static junit.framework.Assert.assertNotNull;
@@ -23,8 +25,8 @@ public class PerformanceTest {
    @BeforeClass
    public static void initHazelcast() {
       System.out.println("Initializaing Hazelcast");
+      KryoSerializer.register(SomeObject.class, OtherObject.class, HashMap.class);
       System.setProperty(GroupProperties.PROP_LOGGING_TYPE, "none");
-      //System.setProperty(GroupProperties.PROP_SERIALIZER_GZIP_ENABLED, "true");
       Hazelcast.getDefaultInstance();
       for(int i = 0; i < COUNT; i++) {
          objects[i] = new SomeObject("name" + i, i, new OtherObject("val" + i, i));
