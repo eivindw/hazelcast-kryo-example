@@ -6,7 +6,7 @@ import com.hazelcast.impl.GroupProperties;
 import eivindw.domain.OtherObject;
 import eivindw.domain.SomeObject;
 import eivindw.io.KryoSerializer;
-import io.W;
+import eivindw.io.KryoWrapper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -75,18 +75,18 @@ public class PerformanceTest {
       long before = System.nanoTime();
       for (int i = 0; i < COUNT; i++) {
          SomeObject obj = objects[i];
-         Object key = wrapKey ? new W(i) : i;
-         Object value = wrapValue ? new W(obj) : obj;
+         Object key = wrapKey ? new KryoWrapper(i) : i;
+         Object value = wrapValue ? new KryoWrapper(obj) : obj;
          testMap.put(key, value);
       }
       for (int i = 0; i < COUNT; i++) {
-         Object key = wrapKey ? new W(i) : i;
+         Object key = wrapKey ? new KryoWrapper(i) : i;
          SomeObject obj = (SomeObject) testMap.get(key);
          assertNotNull(obj);
       }
       long after = System.nanoTime();
       int randomKey = new Random().nextInt(COUNT);
-      long oneEntryCost = testMap.getMapEntry(wrapKey ? new W(randomKey) : randomKey).getCost();
+      long oneEntryCost = testMap.getMapEntry(wrapKey ? new KryoWrapper(randomKey) : randomKey).getCost();
       double estimatedCost = (oneEntryCost * COUNT) / 1e6;
       System.out.println(String.format(
          "%s - time: %.1f ms size one: %d bytes estimated size: %.1f MB", mapName, (after - before) / 1e6, oneEntryCost, estimatedCost));

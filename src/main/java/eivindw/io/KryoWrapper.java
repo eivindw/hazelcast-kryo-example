@@ -1,15 +1,13 @@
-package io;
-
-import eivindw.io.KryoSerializer;
+package eivindw.io;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 
-public class W implements Serializable {
-   
+public class KryoWrapper implements Serializable {
+
    private byte[] s;
 
-   public W(Object target) {
+   public KryoWrapper(Object target) {
       s = KryoSerializer.write(target);
    }
 

@@ -2,10 +2,6 @@ package eivindw.io;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.ObjectBuffer;
-import eivindw.domain.OtherObject;
-import eivindw.domain.SomeObject;
-
-import java.util.HashMap;
 
 public final class KryoSerializer {
 

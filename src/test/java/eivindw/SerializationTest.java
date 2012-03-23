@@ -5,7 +5,7 @@ import com.hazelcast.nio.Serializer;
 import eivindw.domain.OtherObject;
 import eivindw.domain.SomeObject;
 import eivindw.io.KryoSerializer;
-import io.W;
+import eivindw.io.KryoWrapper;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -48,7 +48,7 @@ public class SerializationTest {
       ByteArrayOutputStream baos = new ByteArrayOutputStream(500);
       ObjectOutputStream oos = new ObjectOutputStream(baos);
 
-      oos.writeObject(new W(obj));
+      oos.writeObject(new KryoWrapper(obj));
 
       System.out.println("Standard Java with Kryo wrapper size: " + baos.size());
 
@@ -88,7 +88,7 @@ public class SerializationTest {
    public void hazelcastWrapperSerialization() throws Exception {
       Serializer serializer = new Serializer();
 
-      Data data = serializer.writeObject(new W(obj));
+      Data data = serializer.writeObject(new KryoWrapper(obj));
 
       System.out.println("Hazelcast kryo wrapper size: " + data.size());
 
