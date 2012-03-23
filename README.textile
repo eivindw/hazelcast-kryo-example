@@ -1,1 +1,1 @@
-A small example showing how to use "Hazelcast":http://www.hazelcast.com/.
+A small example showing how to use "Hazelcast":http://www.hazelcast.com/ grid with "Kryo":http://code.google.com/p/kryo/ serialization.
