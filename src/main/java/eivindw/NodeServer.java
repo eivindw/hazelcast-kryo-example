@@ -1,6 +1,8 @@
 package eivindw;
 
+import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import com.hazelcast.core.MultiTask;
 
@@ -9,13 +11,16 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 public class NodeServer {
    private static final String MAP_NAME = "testmap";
 
+   private static HazelcastInstance hz;
+
    public static void main(String[] args) throws Exception {
-      Hazelcast.getDefaultInstance();
+      hz = Hazelcast.newHazelcastInstance(new Config());
 
       PrintStream commandline = System.out;
       BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -52,8 +57,8 @@ public class NodeServer {
    }
 
    private static void runSumJob() throws Exception {
-      MultiTask<Integer> task = new MultiTask<Integer>(new SumCallable(), Hazelcast.getCluster().getMembers());
-      Hazelcast.getExecutorService().execute(task);
+      MultiTask<Integer> task = new MultiTask<Integer>(new SumCallable(), hz.getCluster().getMembers());
+      hz.getExecutorService().execute(task);
       int sumAll = 0;
       for(int result : task.get()) {
          System.out.println("Adding sum: " + result);
@@ -63,17 +68,18 @@ public class NodeServer {
    }
 
    private static void printValues() {
-      IMap<Integer, NumberHolder> map = Hazelcast.getMap(MAP_NAME);
-      for(int key : map.localKeySet()) {
+      IMap<UUID, NumberHolder> map = hz.getMap(MAP_NAME);
+      for(UUID key : map.localKeySet()) {
          System.out.println("Key: "  + key + " Value: " + map.get(key));
       }
+      System.out.println("Total local values: " + map.localKeySet().size());
    }
 
    private static void putRandomValues() {
-      IMap<Integer, NumberHolder> map = Hazelcast.getMap(MAP_NAME);
+      IMap<UUID, NumberHolder> map = hz.getMap(MAP_NAME);
       Random rand = new Random();
-      for(int i = 1; i < 20; i++) {
-         map.put(rand.nextInt(100000), new NumberHolder(rand.nextInt(100), rand.nextInt(100)));
+      for(int i = 0; i < 20; i++) {
+         map.put(UUID.randomUUID(), new NumberHolder(rand.nextInt(100), rand.nextInt(100)));
       }
    }
 
@@ -99,9 +105,9 @@ public class NodeServer {
    private static class SumCallable implements Callable<Integer>, Serializable {
       public Integer call() throws Exception {
          System.out.println("Calculating total sum for local values");
-         IMap<Integer, NumberHolder> map = Hazelcast.getMap(MAP_NAME);
+         IMap<UUID, NumberHolder> map = hz.getMap(MAP_NAME);
          int sum = 0;
-         for(int key : map.localKeySet()) {
+         for(UUID key : map.localKeySet()) {
             sum += map.get(key).getSum();
          }
          System.out.println("My sum: " + sum);
