@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -76,10 +77,10 @@ public class NodeServer {
    }
 
    private static void putRandomValues() {
-      IMap<UUID, NumberHolder> map = hz.getMap(MAP_NAME);
+      Map<UUID, NumberHolder> map = hz.getMap(MAP_NAME);
       Random rand = new Random();
       for(int i = 0; i < 20; i++) {
-         map.put(UUID.randomUUID(), new NumberHolder(rand.nextInt(100), rand.nextInt(100)));
+         map.put(UUID.randomUUID(), new NumberHolder(rand.nextInt(10), rand.nextInt(10)));
       }
    }
 
